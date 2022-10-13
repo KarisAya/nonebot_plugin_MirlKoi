@@ -91,7 +91,7 @@ async def _(bot: Bot, event: MessageEvent):
 
     if len(MirlKoi_list[tag]) < N:
         logger.info(f"正在从MirlKoi获取图片，来源：{tag}")
-        resp = requests.get(f"https://iw233.cn/api.php?sort={tag}&type=json&num=100")
+        resp = requests.get(f"https://dev.iw233.cn/api.php?sort={tag}&type=json&num=100")
         if resp.status_code == 200:
             resp = resp.text
             resp = ''.join(x for x in resp if x.isprintable())
