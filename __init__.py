@@ -25,6 +25,10 @@ except ModuleNotFoundError:
 Bot_NICKNAME: str = list(nonebot.get_driver().config.nickname)[0]
 
 local = Path() / "data" / "MirlKoi"
+if local.exists():
+    pass
+else:
+    local.mkdir(parents=True, exist_ok=True)
 
 # MirlKoi
 
@@ -48,7 +52,7 @@ MirlKoi_tag = {
     "电脑壁纸 横屏壁纸": "pc"
     }
 
-MirlKoi = on_regex("^我?要.*[张份].+$|^来.*[张份].+$", rule = to_me(), priority = 50, block = True)
+MirlKoi = on_regex("^(我?要|来).*[张份].+$", priority = 50, block = True)
 
 @MirlKoi.handle()
 async def _(bot: Bot, event: MessageEvent):
@@ -103,8 +107,11 @@ async def _(bot: Bot, event: MessageEvent):
         logger.info(f"正在从本地队列获取图片，来源：{tag}")
 
     if tag == "local":
-        image = MessageSegment.image(file = local / random.choice(MirlKoi_list["local"]))
-        await MirlKoi.send(Message(msg) + image , at_sender = True)
+        if MirlKoi_list["local"]:
+            image = MessageSegment.image(file = local / random.choice(MirlKoi_list["local"]))
+            await MirlKoi.send(Message(msg) + image , at_sender = True)
+        else:
+            await MirlKoi.send("连接出错了...")
     elif N <= 3:
         image = Message()
         for i in range(N):
